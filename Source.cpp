@@ -1,285 +1,228 @@
-#ifndef Employee_Management_CPP
-#define Employee_Management_CPP
+#ifndef Source_CPP
+#define Source_CPP
 #include<iostream>
 #include<cstring>
 #include "Header.h"
 #include<iostream>
 #include<fstream>
+#include<vector>
+#include<algorithm>
+#include<string>
 using namespace std;
 
-void Employee_management::menu()
+Attendance::Attendance() {
+
+}
+void Employee::display() const
 {
-	//menu for thr main program 
-	while (true)
-	{
-		int choice;
-		char x; // Options to choose an action
-		//system("cls");
-		cout << "\n\t\t\t\t\t-------------------------------" << endl;
-		cout << "\t\t\t\t\t>> EMPLOYE MANAGEMENT SYSTEM <<" << endl;
-		cout << "\t\t\t\t\t-------------------------------" << endl;
-		cout << "\t\t\t\t\t 1. Enter New Record" << endl;
-		cout << "\t\t\t\t\t 2. Display Record" << endl;
-		cout << "\t\t\t\t\t 3. Modify Record" << endl;
-		cout << "\t\t\t\t\t 4. Search Record" << endl;
-		cout << "\t\t\t\t\t 5. Delete Record" << endl;
-		cout << "\t\t\t\t\t 6. Exit" << endl;
+    cout << endl;
+    cout << endl;
+    cout << "Name : " << name << endl;
+    cout << "Employee ID: " << employeeId << endl;
+    cout << "Base Salary: $" << baseSalary << endl;
+}
 
-		cout << "\t\t\t\t\t.................................." << endl;
-		cout << "\t\t\t\t\t>> Choice Options: [1/2/3/4/5/6] <<" << endl;
-		cout << "\t\t\t\t\t.................................." << endl;
-		cout << " Enter Your Choice: "; // Taking the action input
-		cin >> choice;
-		// Calling relevant function as per choice
-		switch (choice)
-		{
-		case 1:
-			do
-			{
-				insert();
-				cout << "\n\n\t\t\t Add Another Employe Record Press (Y, N) : ";
-				cin >> x;
-			} while (x == 'y' || x == 'Y');
-			//waitForEnter();
-			break;
-		case 2:
-			display();
-			break;
-		case 3:
-			modify();
-			break;
-		case 4:
-			search();
-			break;
-		case 5:
-			deleted();
-			break;
-		case 6:
-			system("cls");
-			cout << "\n\t\t\t>> EMPLOYE MANAGEMENT SYSTEM  <<\n\n";
+void Employee::setAtt() {
+    eAttendance = new Attendance();
+    eAttendance->setDaysPresent();
+    eAttendance->setAttendance();
+}
 
-			exit(0);
-		default:
-			cout << "\n\n\t\t\t Invalid Choice... Please Try Again...\n";
-		}
-	}
+int Employee::getEAtt() {
+    return eAttendance->getAttendance();
+}
+
+int Employee::getEmployeeId()
+{
+    return employeeId;
+}
+
+void Employee::setBaseSalary(double salary) {
+    baseSalary = salary;
+}
+
+//-------------------------------------------------------------------------------------------------------------//
+
+double RegularEmployee::calculateSalary() const {
+    return baseSalary + perks + allowances;
+}
+
+
+void RegularEmployee::display() const {
+    Employee::display();
+    cout << "Perks: $" << perks << ", Allowances: $" << allowances << endl;
+}
+
+//--------------------------------------------------------------------------------------------------------------//
+
+double ContractEmployee::calculateSalary() const {
+    return baseSalary + incentives;
+}
+
+void ContractEmployee::display() const {
+    Employee::display();
+    cout << "Incentives: $" << incentives << endl;
+}
+//-------------------------------------------------------------------------------------------------------------------// 
+
+
+//int Attendance::getEmployeeId() const {
+//    return employeeId;
+//}
+
+void Attendance::setDaysPresent() {
+    int d;
+    cout << "Enter the days the employee was present: " << endl;
+    cin >> d;
+    daysPresent = d;
+}
+
+int Attendance::getDaysPresent() const {
+    return daysPresent;
+}
+void Attendance::setAttendance() {
+    cout << "TOTAL WORKING DAYS: " << endl;
+    cin >> total_workingdays;
+
+    attendance = (daysPresent / total_workingdays) * 100;
+   
+}
+
+int Attendance::getAttendance()  {
+    return attendance;
+}
+
+//void Attendance::displayAttendance()
+//{
+//    int totalattendance;
+//    cout << "TOTAL WORKING DAYS: " << endl;
+//    cin >> total_workingdays;
+//
+//    totalattendance = (daysPresent / total_workingdays) * 100;
+//    cout << "TOTAL ATTENDANCE" << totalattendance;
+//}
+
+//------------------------------------------------------------------------------------------//
+void PayrollSystem::addEmployee(Employee* emp)
+{
+    employees.push_back(emp);
+}
+
+//void PayrollSystem::addAttendanceRecord(int employeeId, int daysPresent) {
+  //  attendanceRecords.emplace_back(employeeId, daysPresent);
+//}
+
+void PayrollSystem::displayAllEmployees() const
+{
+    vector<Employee*> sortedEmployees = employees;
+    sort(sortedEmployees.begin(), sortedEmployees.end(), [](Employee* a, Employee* b) {
+        return a->calculateSalary() > b->calculateSalary();
+        });
+
+    for (Employee* emp : sortedEmployees) {
+        emp->display();
+        cout << "Attendance: ";
+        cout<<emp->getEAtt();
+        //auto it = find_if(attendanceRecords.begin(), attendanceRecords.end(), [emp](const Attendance& att) {
+        //    return att.getEmployeeId() == emp->getEmployeeId();
+        //    });
+        //if (it != attendanceRecords.end()) {
+        //    cout << it->getDaysPresent() << " days present this month." << endl;
+        //    //cout << it->displayAttendance() << " days present this month." << endl;
+        //}
+        //else {
+        //    cout << "Attendance not recorded for this employee." << endl;
+        //}
+    }
+}
+
+Employee* PayrollSystem::searchEmployeeById(int id) const {
+    for (Employee* emp : employees) {
+        if (emp->getEmployeeId() == id) {
+            return emp;
+        }
+    }
+    return nullptr;
+}
+
+void PayrollSystem::deleteEmployee(int id) {
+    auto it = remove_if(employees.begin(), employees.end(), [id](Employee* emp) {
+        return emp->getEmployeeId() == id;
+        });
+
+    if (it != employees.end()) {
+        delete* it;
+        employees.erase(it);
+        cout << "Employee with ID " << id << " deleted successfully." << endl;
+    }
+    else {
+        cout << "Employee with ID " << id << " not found." << endl;
+    }
 }
 
 
 
-void Employee_management::insert()
-{
-	//system("cls");
-	fstream file;
-	cout << "\n-------------------------------------------------------------------------------------------------------" << endl;
-	cout << "------------------------------------- Employee Insert Data -------------------------------------------" << endl;
-	cout << "\n Enter Name of Employee: ";
-	cin >> name;
-	cout << "\n Enter Employee ID [max 4 digits]: ";
-	cin >> id;
-	cout << "\n Enter Designation: ";
-	cin >> designation;
-	cout << "\n Enter Employee Age: ";
-	cin >> age;
-	cout << "\n Enter Employee CTC: ";
-	cin >> ctc;
-	cout << "\n Enter Employee Experience: ";
-	cin >> experience;
-	cout << "\n ENTER PERKS: ";
-	cin >> perks;
-	cout<< "\n Enter Employee ALLOWNANCE: ";
-	cin>>allowances;
-	cout << "\n Enter Employee INCENTIVES: ";
-	cin>>incentives;
-	file.open("Employee_Record.txt", ios::app | ios::out);
-	file << " " << name << " " << id << " " << designation << " " << age << " " << ctc << " " << experience <<" "<< perks <<" " << allowances<<" " << incentives << "\n";
-	file.close();
+void PayrollSystem::updateEmployeeData(int id) {
+    Employee* emp = searchEmployeeById(id);
+    cout << "What field you want to update? " << endl;
+    cout << " 1. Update base salary. \n 2. update name \n 3. Update perks \n 4. update allowances. \n 5. update attendance\n " << endl;
+    int n;
+    cin >> n;
 
-}
-void Employee_management::display()
-{
-	
-	int total = 1;
-	fstream file;
-	cout << "\n-------------------------------------------------------------------------------------------------------" << endl;
-	cout << "------------------------------------- Employee Record Data -------------------------------------------" << endl;
-	file.open("Employee_Record.txt", ios::in);
-	if (!file)
-	{
-		cout << "\n\t\t\tNo Data is Present... ";
-		file.close();
-	}
-	else
-	{
-		file >> name >> id >> designation >> age >> ctc >> experience;
-		cout << "\n -------------------------------------------------------------------------------------------------------------------------------------------------------";
-		cout << "\n||    NAME    ||    ID    ||    DESIGNATION    ||    AGE    ||      CTC      ||    EXPERIENCE    ||    PERKS    ||    ALLOWNANCE   ||   INCENTIVES  ||";
-		cout << "\n -------------------------------------------------------------------------------------------------------------------------------------------------------";
-		while (!file.eof())
-		{
-			cout << "\n";
-			cout << total++ << ". " << name << "\t  " << id << "\t\t  " << designation << "\t\t   " << age << "\t\t  " << ctc << "\t\t" << experience << "\t\t" << perks << "\t\t" << allowances << "\t\t"<< incentives ;
-			file >> name >> id >> designation >> age >> ctc >> experience>> perks>> allowances>> incentives;
-		}
-	}
-	file.close();
-	waitForEnter();
+    if (emp != nullptr) {
+        switch (n) {
+        case 1:
+            cout << "Enter the new salary : " << endl;
+            double newBaseSalary;
+            cin >> newBaseSalary;
+            emp->setBaseSalary(newBaseSalary);
+            cout << "Employee with ID " << id << " data updated successfully." << endl;
+        /*case 2:
+            cout << "Enter the new name : " << endl;
+            string newname;
+            cin >> newname;
+            emp->setupdatedNewname(newname);
+            cout << "Employee with ID " << id << " data updated successfully." << endl;*/
+        case 3:
+            double newperks;
+            cout << "Enter Updates perks for the employee:  ";
+            cin >> newperks;
+            emp->setupdatesperks(newperks);
+            cout << "Employee with ID " << id << " data updated successfully." << endl;
+        case 4:
+            double newallowances;
+            cout << "Enter Updates Allowances for the employee:  ";
+            cin >> newallowances;
+            emp->setupdatesallowances(newallowances);
+            cout << "Employee with ID " << id << " data updated successfully." << endl;
+        case 5:
+            emp->setAtt();
+            cout << "Employee with ID " << id << " data updated successfully." << endl;
+        default:
+            cout << "Enter valid field to enter." << endl;
+            cout << "Employee with ID " << id << " not found." << endl;
 
-}
-void Employee_management::modify()
-{
-	system("cls");
-	char checkId[5];
-	int found = 0;
-	fstream file, file1;
-	cout << "\n-------------------------------------------------------------------------------------------------------" << endl;
-	cout << "------------------------------------- Employee Modify Data ------------------------------------------" << endl;
-	file.open("Employee_Record.txt", ios::in);
-	if (!file)
-	{
-		cout << "\n\t\t\tNo Data is Present..";
-		file.close();
-	}
-	else
-	{
-		cout << "\nEnter employee id: ";
-		cin >> checkId;
-		file1.open("record.txt", ios::app | ios::out);
-		file >> name >> id >> designation >> age >> ctc >> experience >> perks >> allowances >> incentives;
-		while (!file.eof())
-		{
-			if (strcmp(checkId, id) == 0)
-			{
-				cout << "\n Enter Name of Employee: ";
-				cin >> name;
-				cout << "\n Enter Employee ID [max 4 digits]: ";
-				cin >> id;
-				cout << "\n Enter Designation: ";
-				cin >> designation;
-				cout << "\n Enter Employee Age: ";
-				cin >> age;
-				cout << "\n Enter Employee CTC: ";
-				cin >> ctc;
-				cout << "\n Enter Employee Experience: ";
-				cin >> experience;
-				cout << "\n ENTER PERKS: ";
-				cin >> perks;
-				cout << "\n Enter Employee ALLOWNANCE: ";
-				cin >> allowances;
-				cout << "\n Enter Employee INCENTIVES: ";
-				cin >> incentives;
-				cout << "\n\nSuccessfully Modify Details Of Employee";
-				file << " " << name << " " << id << " " << designation << " " << age << " " << ctc << " " << experience << " " << perks << " " << allowances << " " << incentives << "\n";
-				found++;
-			}
-			else
-			{
-				file << " " << name << " " << id << " " << designation << " " << age << " " << ctc << " " << experience << " " << perks << " " << allowances << " " << incentives << "\n";
-			}
-			file >> name >> id >> designation >> age >> ctc >> experience >> perks >> allowances >> incentives;
-		}
-		if (found == 0)
-		{
-			cout << "\n\n\tEmployee ID Not Found.. Please Try Again";
-		}
-		file1.close();
-		file.close();
-		remove("Employee_Record.txt");
-		rename("record.txt", "Employee_Record.txt");
-	}
-	waitForEnter();
-}
-void Employee_management::search()
-{
-	system("cls");
-	fstream file;
-	char checkId[5];
-	cout << "\n-------------------------------------------------------------------------------------------------------" << endl;
-	cout << "------------------------------------- Employee Search Data -------------------------------------------" << endl;
-	file.open("Employee_Record.txt", ios::in);
-	cout << "\n\nEnter Employee ID: ";
-	cin >> checkId;
-	if (!file)
-	{
-		cout << "\n\t\t\tNo Data is Present... ";
-		file.close();
-	}
-	else
-	{
-		file >> name >> id >> designation >> age >> ctc >> experience >> perks >> allowances >> incentives;
-		while (!file.eof())
-		{
-			if (strcmp(checkId, id) == 0)
-			{
-				cout << "\n---------------------\n";
-				cout << "Employee Name: " << name << "\n";
-				cout << "Employee ID.: " << id << "\n";
-				cout << "Employee Designation: " << designation << "\n";
-				cout << "Employee Age: " << age << "\n";
-				cout << "Employee CTC: " << ctc << "\n";
-				cout << "Employee Experience: " << experience << "\n";
-				cout << "Employee Perks: " << perks << "\n";
-				cout << " Employeee Allowances: " << allowances << "\n";
-				cout << "Employee Incentives: " << incentives << "\n";
-				cout << "---------------------\n";
-			}
-			file >> name >> id >> designation >> age >> ctc >> experience >> perks >> allowances >> incentives;
-		}
-	}
-	file.close();
-	waitForEnter();
-}
-void Employee_management::deleted()
-{
-	system("cls");
-	char checkId[5];
-	fstream file, file1;
-	int found = 0;
-	cout << "\n-------------------------------------------------------------------------------------------------------" << endl;
-	cout << "------------------------------------- Delete Employee Data ------------------------------------------" << endl;
-	file.open("Employee_Record.txt", ios::in);
-	if (!file)
-	{
-		cout << "\n\t\t\tNo Data is Present..";
-		file.close();
-	}
-	else
-	{
-		cout << "\nEnter Employee Id To Remove Data: ";
-		cin >> checkId;
-		file1.open("record.txt", ios::app | ios::out);
-		file >> name >> id >> designation >> age >> ctc >> experience >> perks >> allowances >> incentives;
-		while (!file.eof())
-		{
-			if (strcmp(checkId, id) != 0)
-			{
-				file << " " << name << " " << id << " " << designation << " " << age << " " << ctc << " " << experience << " " << perks << " " << allowances << " " << incentives << "\n";
-			}
-			else
-			{
-				found++;
-				cout << "\n\t\t\tSuccessfully Delete Data";
-			}
-			file >> name >> id >> designation >> age >> ctc >> experience >> perks >> allowances >> incentives;
-		}
-		if (found == 0)
-		{
-			cout << "\n\n\tEmployee ID Not Found.. Please Try Again";
-		}
-		file1.close();
-		file.close();
-		remove("Employee_Record.txt");
-		rename("record.txt", "Employee_Record.txt");
-		waitForEnter();
-	}
+        };
+    }
+   
 }
 
-void Employee_management::waitForEnter()
+//-------------------------------------------------------------------------------------------------------------------------//
+//functions to update employee details 
+
+void Employee::setupdatedNewname(string name)
 {
-	cout << "\n\nPress enter to go back: ";
-	cin.get();
+    newname = name;
 }
 
+void Employee::setupdatesperks(double perks)
+{
+    newperks = perks;
+}
 
+void Employee::setupdatesallowances(double allowances)
+{
+    newallowances = allowances;
+}
 
 #endif
