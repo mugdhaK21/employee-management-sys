@@ -122,22 +122,22 @@ int main()
         }
         case 4: {
             int id;
-            string newname;
+          /*  string newname;
             double newBaseSalary;
             double newperks;
-            double newallowances;
+            double newallowances;*/
             cout << "Enter employee ID to update data: ";
             cin >> id;
-            cout << "Enter Updated Name of the Emplyee: ";
+            /*cout << "Enter Updated Name of the Emplyee: ";
             cin >> newname;
             cout << "Enter Updates perks for the employee:  ";
             cin >> newperks;
             cout << "Enter Updates Allowances for the employee:  ";
             cin >> newallowances;
             cout << "Enter new base salary: ";
-            cin >> newBaseSalary;
+            cin >> newBaseSalary;*/
 
-            payrollSystem.updateEmployeeData(id, newBaseSalary, newname, newperks, newallowances);
+            payrollSystem.updateEmployeeData(id);
             cout << "------------------------------------------------------------" << endl;
             break;
 
