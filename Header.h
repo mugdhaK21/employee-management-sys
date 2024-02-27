@@ -8,7 +8,7 @@ class Employee;
 class payrollSystem;
 class Attendance {
 private:
-    int attendance = 100;
+    float attendance = 0;
     int daysPresent;
     int total_workingdays;
 
