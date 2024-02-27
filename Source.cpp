@@ -84,7 +84,7 @@ void Attendance::setAttendance() {
     cout << "TOTAL WORKING DAYS: " << endl;
     cin >> total_workingdays;
 
-    attendance = (daysPresent / total_workingdays) * 100;
+    attendance =(float)daysPresent / total_workingdays * 100;
    
 }
 
