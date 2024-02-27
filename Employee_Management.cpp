@@ -50,46 +50,11 @@ int main()
 
         switch (choice) {
         case 1: {
-            int type;
-            cout << "Enter type of employee (1 for Regular, 2 for Contract): ";
-            cin >> type;
-            cout << "------------------------------------------------------------" << endl;
-
-            string name;
-            int employeeId;
-            double baseSalary;
-
-            cout << "Enter employee name: ";
-            cin.ignore();
-            getline(cin, name);
-
-            cout << "Enter employee ID: ";
-            cin >> employeeId;
-
-            cout << "Enter base salary: ";
-            cin >> baseSalary;
-
-            if (type == 1) {
-                double perks, allowances;
-                cout << "Enter perks: ";
-                cin >> perks;
-
-                cout << "Enter allowances: ";
-                cin >> allowances;
-
-                payrollSystem.addEmployee(new RegularEmployee(name, employeeId, baseSalary, perks, allowances));
-            }
-            else if (type == 2) {
-                double incentives;
-                cout << "Enter incentives: ";
-                cin >> incentives;
-
-                payrollSystem.addEmployee(new ContractEmployee(name, employeeId, baseSalary, incentives));
-            }
-            else {
-                cout << "Invalid employee type." << endl;
-            }
-
+            EmployeeFactory empFactory;
+            Employee* emp;
+            emp = empFactory.getEmployee();
+            payrollSystem.addEmployee(emp);
+           
             cout << "------------------------------------------------------------" << endl;
             break;
 
@@ -119,10 +84,10 @@ int main()
 
         case 4: {
             int id;
-       
+
             cout << "Enter employee ID to update data: ";
             cin >> id;
-          
+
 
             payrollSystem.updateEmployeeData(id);
             cout << "------------------------------------------------------------" << endl;
@@ -142,7 +107,7 @@ int main()
             cout << "Exiting..." << endl;
             cout << "------------------------------------------------------------" << endl;
             break;
- 
+
 
 
         default:
