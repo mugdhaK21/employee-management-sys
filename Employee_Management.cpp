@@ -90,12 +90,6 @@ int main()
                 cout << "Invalid employee type." << endl;
             }
 
-            /*int daysPresent;
-            cout << "Enter days present for this month: ";
-            cin >> daysPresent;
-            payrollSystem.addAttendanceRecord(employeeId, daysPresent);*/
-
-
             cout << "------------------------------------------------------------" << endl;
             break;
 
@@ -108,9 +102,12 @@ int main()
             cout << "Enter employee ID to search: ";
             cin >> id;
             {
-                Employee* emp = payrollSystem.searchEmployeeById(id);
+                pair<Employee*, int> result = payrollSystem.searchEmployeeById(id);
+                Employee* emp = result.first;
+                int attendance = result.second;
                 if (emp != nullptr) {
                     emp->display();
+                    cout << "Attendance: " << attendance << "%" << endl;
                 }
                 else {
                     cout << "Employee with ID " << id << " not found." << endl;
@@ -118,24 +115,14 @@ int main()
             }
             cout << "------------------------------------------------------------" << endl;
             break;
-
         }
+
         case 4: {
             int id;
-          /*  string newname;
-            double newBaseSalary;
-            double newperks;
-            double newallowances;*/
+       
             cout << "Enter employee ID to update data: ";
             cin >> id;
-            /*cout << "Enter Updated Name of the Emplyee: ";
-            cin >> newname;
-            cout << "Enter Updates perks for the employee:  ";
-            cin >> newperks;
-            cout << "Enter Updates Allowances for the employee:  ";
-            cin >> newallowances;
-            cout << "Enter new base salary: ";
-            cin >> newBaseSalary;*/
+          
 
             payrollSystem.updateEmployeeData(id);
             cout << "------------------------------------------------------------" << endl;
@@ -155,6 +142,8 @@ int main()
             cout << "Exiting..." << endl;
             cout << "------------------------------------------------------------" << endl;
             break;
+ 
+
 
         default:
             cout << "Invalid choice. Please try again." << endl;
