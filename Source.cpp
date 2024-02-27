@@ -46,7 +46,7 @@ void Employee::display() const
     cout << "Name : " << name << endl;
     cout << "Employee ID: " << employeeId << endl;
     cout << "Base Salary: $" << baseSalary << endl;
- 
+
 }
 
 void Employee::setAtt() {
@@ -66,6 +66,50 @@ int Employee::getEmployeeId()
 
 void Employee::setBaseSalary(double salary) {
     baseSalary = salary;
+}
+
+Employee* EmployeeFactory::getEmployee() {
+    int type;
+    cout << "Enter type of employee (1 for Regular, 2 for Contract): ";
+    cin >> type;
+    cout << "------------------------------------------------------------" << endl;
+    string name;
+    int employeeId;
+    double baseSalary;
+
+    cout << "Enter employee name: ";
+    cin.ignore();
+    getline(cin, name);
+
+    cout << "Enter employee ID: ";
+    cin >> employeeId;
+
+    cout << "Enter base salary: ";
+    cin >> baseSalary;
+    if (type == 1) {
+        double perks, allowances;
+        cout << "Enter perks: ";
+        cin >> perks;
+
+        cout << "Enter allowances: ";
+        cin >> allowances;
+
+        return new RegularEmployee(name, employeeId, baseSalary, perks, allowances);
+    }
+    else if (type == 2) {
+        double incentives;
+        cout << "Enter incentives: ";
+        cin >> incentives;
+
+        return new ContractEmployee(name, employeeId, baseSalary, incentives);
+    }
+    else {
+        cout << "Invalid employee type." << endl;
+    }
+
+    cout << "------------------------------------------------------------" << endl;
+   
+
 }
 
 //-------------------------------------------------------------------------------------------------------------//
@@ -113,15 +157,15 @@ void PayrollSystem::displayAllEmployees() const
         cout << emp->getEAtt();
         cout << endl;
         cout << endl;
-   
+
     }
 }
 
 pair<Employee*, int> PayrollSystem::searchEmployeeById(int id) const {
     for (Employee* emp : employees) {
-       /* If a match is found, this line creates a pair using the make_pair function. 
-        The first element of the pair is a pointer to the employee object (emp), 
-            and the second element is the employee's attendance, obtained using the getEAtt method.*/
+        /* If a match is found, this line creates a pair using the make_pair function.
+         The first element of the pair is a pointer to the employee object (emp),
+             and the second element is the employee's attendance, obtained using the getEAtt method.*/
         if (emp->getEmployeeId() == id) {
 
             //make pair function to get emloyee details with attendance 
@@ -172,18 +216,18 @@ void PayrollSystem::updateEmployeeData(int id) {
             cout << "Employee with ID " << id << " data updated successfully." << endl;
             break;
         case 2:
-                cout << "Enter the new name : " << endl;
-                cin >> newname;
-                emp->setupdatedNewname(newname);
-                cout << "Employee with ID " << id << " data updated successfully." << endl;
-                break;
+            cout << "Enter the new name : " << endl;
+            cin >> newname;
+            emp->setupdatedNewname(newname);
+            cout << "Employee with ID " << id << " data updated successfully." << endl;
+            break;
         case 3:
             cout << "Enter Updates perks for the employee:  ";
             cin >> newperks;
             emp->setupdatesperks(newperks);
             cout << "Employee with ID " << id << " data updated successfully." << endl;
             break;
-        case 4: 
+        case 4:
             cout << "Enter Updates Allowances for the employee:  ";
             cin >> newallowances;
             emp->setupdatesallowances(newallowances);
