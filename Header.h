@@ -98,8 +98,14 @@ public:
 
     void display() const override;
 };
+// Class to create factory
 
-// Class to maintain monthly attendance records
+class EmployeeFactory {
+    Employee* emp;
+public:
+    Employee* getEmployee();
+
+};
 
 // Class to maintain employee payroll data
 
@@ -122,7 +128,7 @@ public:
 
     void addEmployee(Employee* emp);
 
-    void addAttendanceRecord(int employeeId, int daysPresent);
+   // void addAttendanceRecord(int employeeId, int daysPresent);
 
     /*This function displays details of all employees along with their attendance records.
         It sorts the employees vector based on the salary of each employee in descending order using a lambda functionand sort.
@@ -133,9 +139,18 @@ public:
 
 
 
-    /*The declaration pair<Employee*, int> searchEmployeeById(int id) const; 
+    /*The declaration pair<Employee*, int> searchEmployeeById(int id) const;
     indicates a function named searchEmployeeById within a class.
     It takes an integer parameter id and returns a pair consisting of a pointer to an Employee object and an integer.*/
+    
+    
+    
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     pair<Employee*, int> searchEmployeeById(int id) const;
 
     /*This function deletes an employee record by their ID.
