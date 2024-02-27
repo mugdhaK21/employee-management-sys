@@ -3,8 +3,9 @@
 
 #include<iostream>
 #include<vector>
+#include<fstream>
 using namespace std;
-class Employee;
+class Employee;    //forward declaration of classess 
 class payrollSystem;
 class Attendance {
 private:
@@ -41,10 +42,12 @@ protected:
     double newBaseSalary;
     double newperks;
     double newallowances;
-    Attendance* eAttendance=NULL;
+
+    //object is created of attandance class 
+    Attendance* eAttendance = NULL;
 
 public:
-    Employee(string name, int employeeId, double baseSalary) : name(name), employeeId(employeeId), baseSalary(baseSalary),eAttendance(new Attendance){}
+    Employee(string name, int employeeId, double baseSalary) : name(name), employeeId(employeeId), baseSalary(baseSalary), eAttendance(new Attendance) {}
 
     virtual ~Employee() {};
 
@@ -62,6 +65,8 @@ public:
     void setupdatedNewname(string name);
     void setupdatesperks(double perks);
     void setupdatesallowances(double allowances);
+
+
     friend payrollSystem;
 };
 
@@ -102,11 +107,13 @@ class PayrollSystem {
 private:
 
     vector<Employee*> employees;
-  
+
 
 public:
     /* It is responsible for deallocating memory held by dynamically allocated Employee objects in the employees vector.
          It iterates through the employees vector and deletes each Employee object.*/
+
+
     ~PayrollSystem() {
         for (Employee* emp : employees) {
             delete emp;
@@ -126,13 +133,10 @@ public:
 
 
 
-
-    /*This function searches for an employee by their ID.
-        It takes an employee ID as an argumentand returns a pointer to the corresponding Employee object if found, otherwise, it returns nullptr.
-        It iterates through the employees vectorand compares the ID of each employee with the provided ID.*/
-    Employee* searchEmployeeById(int id) const;
-
-
+    /*The declaration pair<Employee*, int> searchEmployeeById(int id) const; 
+    indicates a function named searchEmployeeById within a class.
+    It takes an integer parameter id and returns a pair consisting of a pointer to an Employee object and an integer.*/
+    pair<Employee*, int> searchEmployeeById(int id) const;
 
     /*This function deletes an employee record by their ID.
         It takes an employee ID as an argumentand removes the corresponding Employee object from the employees vector.
@@ -148,7 +152,9 @@ public:
         If the employee is not found, it prints a message indicating that the employee with the given ID was not found.*/
 
     void updateEmployeeData(int id);
-   
+
+
+
 };
 
 
